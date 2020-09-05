@@ -1,4 +1,4 @@
-import { createElement, render, Component, Fragment } from "./toy-react";
+import { createElement, render, Component, Fragment } from "./framework/toy-react";
 
 class MyComponent extends Component {
     render() {
@@ -20,4 +20,4 @@ render(
 
         <div>789</div>
     </>
-, document.body);
+, document.getElementById("app"));
