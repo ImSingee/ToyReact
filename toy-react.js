@@ -19,6 +19,39 @@ class TextWrapper {
     }
 }
 
+export class Fragment {
+    constructor() {
+        this.children = [];
+        this._root = null;
+    }
+
+    appendChild(childComponent) {
+        this.children.push(childComponent);
+    }
+
+    get root() {
+        if (!this._root) {
+            this._root = []
+
+            const appendRoot = root => {
+                if (root instanceof Array) {
+                    for (const r of root) {
+                        appendRoot(r);
+                    }
+                } else {
+                    this._root.push(root);
+                }
+            }
+
+            for (const child of this.children) {
+                appendRoot(child.root);
+            }
+        }
+
+        return this._root;
+    }
+}
+
 export class Component {
     constructor() {
         this.props = Object.create(null);
@@ -31,7 +64,13 @@ export class Component {
     }
 
     appendChild(childComponent) {
-        this.children.push(childComponent);
+        if (childComponent instanceof Fragment) {
+            for (const c of childComponent.children) {
+                this.children.push(c);
+            }
+        } else {
+            this.children.push(childComponent);
+        }
     }
 
     get root() {
@@ -73,5 +112,13 @@ export function createElement(component, attributes, ...children) {
 }
 
 export function render(component, parentElement) {
-    parentElement.appendChild(component.root);
+    const root = component.root;
+
+    if (root instanceof Array) {
+        for (let c of root) {
+            parentElement.appendChild(c);
+        }
+    } else {
+        parentElement.appendChild(root);
+    }
 }
