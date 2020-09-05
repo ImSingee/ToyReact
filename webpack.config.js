@@ -25,5 +25,8 @@ module.exports = {
           template: 'src/index.html',
           hash: true,
         })
-    ]
+    ],
+    devServer: {
+        open: true,
+    }
 }
